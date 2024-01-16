@@ -1,0 +1,18 @@
+# Node.js
+node_modules/
+
+# Parcel
+dist/
+.cache/
+.parcel-cache/
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+
+# Editor files
+.vscode/
+.idea/
