@@ -9,6 +9,8 @@ import NotFound from './src/components/NotFound';
 import Footer from './src/components/Footer';
 import { createBrowserRouter,RouterProvider,Outlet } from 'react-router-dom';
 import Home from './src/components/Home';
+import OtpVerifyForgotPassword from './src/components/OtpVerifyForgotPassword';
+import RenewPassword from './src/components/RenewPassword';
 
 const AppLayout = ()=>{
     return(
@@ -44,6 +46,14 @@ const AppRoute = createBrowserRouter([
             {
                 path:"/forgotPassword",
                 element:<ForgotPassword/>
+            },
+            {
+                path:"/otpVerification_for_forgotPassword/:email",
+                element:<OtpVerifyForgotPassword/>
+            },
+            {
+                path:"/user/renewPassword/:email",
+                element:<RenewPassword/>
             },
             {
                 path:"*",

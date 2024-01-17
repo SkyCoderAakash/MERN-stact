@@ -20,6 +20,7 @@ const Login = ()=>{
                 },
                 body : JSON.stringify(userData),
             });
+            // const data = await loginSuccess.json();
             const status = loginSuccess.status;
             if (loginSuccess.ok){
                 const responseData = await loginSuccess.json();
@@ -27,12 +28,9 @@ const Login = ()=>{
                     console.log('Login Successfully & welcome to our app');
                     console.log(status);
                     navigate('/');
-                } else if (responseData.message === 'Email sent again to ' + email + ' because user is registered but not verified') {
-                    // navigate('/VerifyMail');
-                    console.log('User login but not verified');
-                    console.log(status);
                 } else {
-                    console.log('Internal server error');
+                    navigate(`/user/verification/${userData.email}`);
+                    console.log('user is register but not verifrd');
                     console.log(status);
                 }
             } else {
@@ -64,7 +62,7 @@ const Login = ()=>{
                 </form>
             </div>
         </div>
-    )
+    );
 };
 
 export default Login;

@@ -1,14 +1,32 @@
 import React,{useState} from 'react';
-import {Link} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 const ForgotPassword = ()=>{
     const [userData,setUserData] = useState({email : ""});
+    const navigate = useNavigate();
     const changeHandle = (e)=>{
         setUserData({...userData,[e.target.name]:e.target.value})
     }; 
-    const submitHandle = (e)=>{
-        e.preventDefault();
-        console.log(userData);
+    const submitHandle = async (e)=>{
+        try {
+            e.preventDefault();
+            const forgotPassword = await fetch(`http://localhost:5050/user/forgotPassword`,{
+                method : "POST",
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                body : JSON.stringify(userData)
+            });
+            const data = await forgotPassword.json();
+            if(forgotPassword.ok){
+                navigate(`/otpVerification_for_forgotPassword/${userData.email}`);
+                console.log("user found");
+            }else{
+                console.log('error');
+            };
+        } catch (error) {
+            console.log(error.message);
+        };
     };
     return(
         <div className="flex justify-center items-center p-16">

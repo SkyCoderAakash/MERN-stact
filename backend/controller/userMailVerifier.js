@@ -1,9 +1,10 @@
+import mongoose from "mongoose";
 import mailSender from "../MailSender.js";
 import userModel from "../model/userSchema.js";
 
 const mailVerification = async (req,res)=>{
     try {
-        const email = req.params.email;
+        const {email} = req.params;
         const userCheck = await userModel.findOne({email : email});
         if(userCheck){
             if(Date.now()-userCheck.verificationCode.timeStamp < 10*60*1000){
@@ -22,9 +23,10 @@ const mailVerification = async (req,res)=>{
             };
         }else{
             res.status(404).json({ message: "404 not found" });
-        }
+        };
     } catch (error) {
-        res.status(500).json({ message: 'Internal server error in mailVerification' });
+        res.status(500).json({ message: 'Internal server error in mailVerification' });;
+        console.log(error.message);
     };
 };
 
@@ -42,8 +44,9 @@ const otpSenderController = async (req,res)=>{
                         otp : OTP,
                         timeStamp : Date.now(),
                     };
-                    await userCheck.save();
-                    res.status(200).json({ message: 'Email sent again to', email });
+                    const data = await userCheck.save();
+                    const user_id = data._id.toString()
+                    res.status(200).json({ message: 'Email sent again',id:user_id });
                 }else(
                     res.status(429).json({ message: 'Please wait for 2 minutes' })
                 );

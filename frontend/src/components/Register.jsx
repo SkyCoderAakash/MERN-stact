@@ -17,6 +17,7 @@ const Register = ()=>{
                 },
                 body : JSON.stringify(userData),
             });
+            const data = await registerSuccess.json();
             if(registerSuccess.ok){
                 navigate(`/user/verification/${userData.email}`);
                 console.log("registration please verify mail");

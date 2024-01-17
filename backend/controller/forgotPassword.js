@@ -14,28 +14,35 @@ const forgotPassword = async (req,res)=>{
                 timeStamp : Date.now(),
             };
             const data = await userCheck.save();
-            res.status(200).json({ message: 'New Email has been send to your email Id'});
-            // now we have to show a from with 2 fields that is for password and confirm password
+            const user_id = data._id.toString();
+            res.status(200).json({ message: 'New Email has been send to your email Id',id:user_id });
         }else{
             res.status(404).json({ message: 'the email you have entered is not exist'});
+            console.log('user not found');
         };
     } catch (error) {
         console.log(error.message);
+        console.log('server internal error');
     };
 };
 
-const gettingOTP = async (req,res)=>{
+const gettingOtpForgotPassword = async (req,res)=>{
     try{
         const {email} = req.params;
         const {otp} = req.body;
         const userCheck = await userModel.findOne({email : email});
+        const user_id = userCheck._id.toString();
         if(userCheck){
             if(Date.now() - userCheck.verificationCode.timeStamp < 10*60*1000){
                 if(userCheck.verificationCode.otp == otp){
-                    console.log("show a from for update password");
+                    userCheck.isVarified = 1;
+                    const newData = await userCheck.save();
+                    if(newData){
+                        res.status(200).json({message : "user authenticate",id:user_id });
+                    }
                 }else{
-                    console.log("invaild OTP")
-                }
+                    res.status(400).json({message : "invalid otp"});
+                };
             }else(
                 cosole.log('req timeout please send mail again')
             );
@@ -47,4 +54,4 @@ const gettingOTP = async (req,res)=>{
     };
 }
 
-export {forgotPassword,gettingOTP};
+export {forgotPassword,gettingOtpForgotPassword};
